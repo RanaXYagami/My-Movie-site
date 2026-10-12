@@ -11,6 +11,8 @@
         .logo { font-size: 26px; font-weight: bold; color: #e50914; }
         .logo span { color: #fff; }
         .hero { text-align: center; padding: 40px 20px; background: #181a20; margin-bottom: 30px; border-bottom: 1px solid #262932; }
+        .hero h1 { font-size: 32px; margin-bottom: 10px; }
+        .hero p { color: #aaa; font-size: 16px; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         .section-title { font-size: 22px; margin-bottom: 20px; border-left: 4px solid #e50914; padding-left: 10px; }
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
@@ -44,9 +46,7 @@
 
     <div class="container">
         <h2 class="section-title">Latest Releases</h2>
-        <div class="movie-grid" id="movieGrid">
-            <!-- Sanity theke automatic movie ashbe -->
-        </div>
+        <div class="movie-grid" id="movieGrid"></div>
     </div>
 
     <div id="videoModal" class="modal">
@@ -62,35 +62,27 @@
     </div>
 
     <script>
-        const PROJECT_ID = "hbhc4jai";
-        const DATASET = "production";
-        const QUERY = encodeURIComponent('*[_type == "movie"]{title, year, genre, rating, posterUrl, embedUrl}');
-        const URL = `https://${PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${DATASET}?query=${QUERY}`;
-
         async function fetchMovies() {
             try {
-                const response = await fetch(URL);
-                const data = await response.json();
-                const movies = data.result;
+                const response = await fetch('./movies.json');
+                const movies = await response.json();
                 const grid = document.getElementById('movieGrid');
                 
-                if (movies && movies.length > 0) {
-                    grid.innerHTML = '';
-                    movies.forEach(movie => {
-                        grid.innerHTML += `
-                            <div class="movie-card" onclick="openPlayer('${movie.title}', '${movie.embedUrl}')">
-                                <div class="poster-container">
-                                    <img src="${movie.posterUrl}" alt="${movie.title}">
-                                    <div class="rating">★ ${movie.rating || 'N/A'}</div>
-                                </div>
-                                <div class="movie-info">
-                                    <div class="movie-title">${movie.title}</div>
-                                    <div class="movie-meta">${movie.year || ''} • ${movie.genre || ''}</div>
-                                </div>
+                grid.innerHTML = '';
+                movies.forEach(movie => {
+                    grid.innerHTML += `
+                        <div class="movie-card" onclick="openPlayer('${movie.title}', '${movie.embedUrl}')">
+                            <div class="poster-container">
+                                <img src="${movie.posterUrl}" alt="${movie.title}">
+                                <div class="rating">★ ${movie.rating}</div>
                             </div>
-                        `;
-                    });
-                }
+                            <div class="movie-info">
+                                <div class="movie-title">${movie.title}</div>
+                                <div class="movie-meta">${movie.year} • ${movie.genre}</div>
+                            </div>
+                        </div>
+                    `;
+                });
             } catch (error) {
                 console.error("Error loading movies:", error);
             }

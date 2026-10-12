@@ -1,4 +1,66 @@
-<div class="rating">★ 8.2</div>
+!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineFlix - Free Movies</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; background-color: #0f1015; color: #ffffff; padding-bottom: 50px; }
+        header { background-color: #181a20; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e50914; }
+        .logo { font-size: 26px; font-weight: bold; color: #e50914; }
+        .logo span { color: #fff; }
+        .hero { text-align: center; padding: 30px 20px; background: #181a20; margin-bottom: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .section-title { font-size: 20px; margin-bottom: 20px; border-left: 4px solid #e50914; padding-left: 10px; }
+        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .movie-card { background-color: #181a20; border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid #262932; }
+        .movie-card:hover { transform: translateY(-5px); transition: 0.3s; border-color: #e50914; }
+        .poster-container { width: 100%; height: 250px; overflow: hidden; position: relative; }
+        .poster-container img { width: 100%; height: 100%; object-fit: cover; }
+        .rating { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: #f1c40f; padding: 3px 6px; border-radius: 4px; font-size: 12px; }
+        .movie-info { padding: 10px; }
+        .movie-title { font-size: 14px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .movie-meta { font-size: 12px; color: #888; margin-top: 5px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #181a20; width: 90%; max-width: 700px; border-radius: 8px; overflow: hidden; }
+        .modal-header { padding: 12px 20px; display: flex; justify-content: space-between; background: #262932; }
+        .close-btn { font-size: 24px; cursor: pointer; color: #fff; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Cine<span>Flix</span></div>
+    </header>
+
+    <div class="hero">
+        <h1>Welcome to CineFlix</h1>
+        <p>Watch HD Movies & TV Shows Anywhere</p>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">Latest Releases</h2>
+
+        <div class="movie-grid">
+
+            <div class="movie-card" onclick="openPlayer('Avengers: Endgame', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                <div class="poster-container">
+                    <img src="https://m.media-amazon.com/images/M/MVBMTc5OTI5NTM5N15BMl5BanBnXkFtZTgwNjA2OTE2NzM@._V1_.jpg" alt="Poster">
+                    <div class="rating">★ 8.4</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">Avengers: Endgame</div>
+                    <div class="movie-meta">2019 • Action</div>
+                </div>
+            </div>
+
+            <div class="movie-card" onclick="openPlayer('Spider-Man: No Way Home', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                <div class="poster-container">
+                    <img src="https://m.media-amazon.com/images/M/MVBNWE5MGI3MDUtMmMyMC00MTI3LTg4MDUtM2M5N2I0YTFkM2M4XkEyXkFqcGc@._V1_.jpg" alt="Poster">
+                    <div class="rating">★ 8.2</div>
                 </div>
                 <div class="movie-info">
                     <div class="movie-title">Spider-Man: No Way Home</div>

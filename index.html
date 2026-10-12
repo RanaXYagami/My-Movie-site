@@ -1,25 +1,53 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Movie Site</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #141414; color: #fff; text-align: center; padding: 20px; }
-        h1 { color: #e50914; }
-        .movie-box { background-color: #222; max-width: 650px; margin: 20px auto; padding: 15px; border-radius: 8px; }
-        iframe { width: 100%; height: 360px; border: none; border-radius: 8px; }
-    </style>
-</head>
-<body>
+<div class="rating"><i class="fa-solid fa-star"></i> 8.2</div>
+                    <div class="play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">Spider-Man: No Way Home</div>
+                    <div class="movie-meta">2021 • Action / Fantasy</div>
+                </div>
+            </div>
 
-    <h1>My Movie Portal</h1>
-    <p>ফ্রি মুভি স্ট্রিম করুন</p>
+            <!-- Movie Card 3 -->
+            <div class="movie-card" onclick="openPlayer('Avatar: The Way of Water', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                <div class="poster-container">
+                    <img src="https://m.media-amazon.com/images/M/MVBYjhiNjaceLWUtMTliMS00M2I2LThmOWUtYjc1ZTE2N2FkNTI2XkEyXkFqcGc@._V1_.jpg" alt="Movie Poster">
+                    <div class="rating"><i class="fa-solid fa-star"></i> 7.6</div>
+                    <div class="play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">Avatar: The Way of Water</div>
+                    <div class="movie-meta">2022 • Sci-Fi / Adventure</div>
+                </div>
+            </div>
 
-    <div class="movie-box">
-        <h2>Demo Video Player</h2>
-        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+        </div>
     </div>
 
+    <!-- Video Modal / Popup Player -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Movie Title</h3>
+                <span class="close-btn" onclick="closePlayer()">&times;</span>
+            </div>
+            <div class="video-container">
+                <iframe id="videoIframe" src="" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript logic -->
+    <script>
+        function openPlayer(title, embedUrl) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('videoIframe').src = embedUrl;
+            document.getElementById('videoModal').style.display = 'flex';
+        }
+
+        function closePlayer() {
+            document.getElementById('videoModal').style.display = 'none';
+            document.getElementById('videoIframe').src = '';
+        }
+    </script>
 </body>
 </html>

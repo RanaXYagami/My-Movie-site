@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineFlix - Watch Free Movies Online</title>
-    <meta name="description" content="Watch HD movies online for free on CineFlix. Stream latest Hollywood and Bollywood releases.">
-    <meta name="keywords" content="cineflix, free movies, watch hd movies, online streaming">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f1015; color: #ffffff; padding-bottom: 50px; }
@@ -13,8 +11,6 @@
         .logo { font-size: 26px; font-weight: bold; color: #e50914; }
         .logo span { color: #fff; }
         .hero { text-align: center; padding: 40px 20px; background: #181a20; margin-bottom: 30px; border-bottom: 1px solid #262932; }
-        .hero h1 { font-size: 32px; margin-bottom: 10px; }
-        .hero p { color: #aaa; font-size: 16px; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         .section-title { font-size: 22px; margin-bottom: 20px; border-left: 4px solid #e50914; padding-left: 10px; }
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
@@ -48,42 +44,8 @@
 
     <div class="container">
         <h2 class="section-title">Latest Releases</h2>
-
-        <div class="movie-grid">
-
-            <div class="movie-card" onclick="openPlayer('Avengers: Endgame', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
-                <div class="poster-container">
-                    <img src="https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e921Sq3P31x.jpg" alt="Avengers Endgame">
-                    <div class="rating">★ 8.4</div>
-                </div>
-                <div class="movie-info">
-                    <div class="movie-title">Avengers: Endgame</div>
-                    <div class="movie-meta">2019 • Action / Sci-Fi</div>
-                </div>
-            </div>
-
-            <div class="movie-card" onclick="openPlayer('Spider-Man: No Way Home', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
-                <div class="poster-container">
-                    <img src="https://image.tmdb.org/t/p/w500/1g0dhY23L9mS33u21Bf29A9P41.jpg" alt="Spider-Man No Way Home">
-                    <div class="rating">★ 8.2</div>
-                </div>
-                <div class="movie-info">
-                    <div class="movie-title">Spider-Man: No Way Home</div>
-                    <div class="movie-meta">2021 • Action / Fantasy</div>
-                </div>
-            </div>
-
-            <div class="movie-card" onclick="openPlayer('Avatar: The Way of Water', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
-                <div class="poster-container">
-                    <img src="https://image.tmdb.org/t/p/w500/t6822W81C32A1C32A1C32A1.jpg" alt="Avatar The Way of Water">
-                    <div class="rating">★ 7.6</div>
-                </div>
-                <div class="movie-info">
-                    <div class="movie-title">Avatar: The Way of Water</div>
-                    <div class="movie-meta">2022 • Sci-Fi / Adventure</div>
-                </div>
-            </div>
-
+        <div class="movie-grid" id="movieGrid">
+            <!-- Sanity theke automatic movie ashbe -->
         </div>
     </div>
 
@@ -100,15 +62,52 @@
     </div>
 
     <script>
+        const PROJECT_ID = "hbhc4jai";
+        const DATASET = "production";
+        const QUERY = encodeURIComponent('*[_type == "movie"]{title, year, genre, rating, posterUrl, embedUrl}');
+        const URL = `https://${PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${DATASET}?query=${QUERY}`;
+
+        async function fetchMovies() {
+            try {
+                const response = await fetch(URL);
+                const data = await response.json();
+                const movies = data.result;
+                const grid = document.getElementById('movieGrid');
+                
+                if (movies && movies.length > 0) {
+                    grid.innerHTML = '';
+                    movies.forEach(movie => {
+                        grid.innerHTML += `
+                            <div class="movie-card" onclick="openPlayer('${movie.title}', '${movie.embedUrl}')">
+                                <div class="poster-container">
+                                    <img src="${movie.posterUrl}" alt="${movie.title}">
+                                    <div class="rating">★ ${movie.rating || 'N/A'}</div>
+                                </div>
+                                <div class="movie-info">
+                                    <div class="movie-title">${movie.title}</div>
+                                    <div class="movie-meta">${movie.year || ''} • ${movie.genre || ''}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading movies:", error);
+            }
+        }
+
         function openPlayer(title, embedUrl) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('videoIframe').src = embedUrl;
             document.getElementById('videoModal').style.display = 'flex';
         }
+
         function closePlayer() {
             document.getElementById('videoModal').style.display = 'none';
             document.getElementById('videoIframe').src = '';
         }
+
+        fetchMovies();
     </script>
 </body>
 </html>

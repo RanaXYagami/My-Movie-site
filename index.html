@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineFlix - Watch Free Movies Online</title>
+    <meta name="description" content="Watch HD movies online for free on CineFlix. Stream latest Hollywood and Bollywood releases.">
+    <meta name="keywords" content="cineflix, free movies, watch hd movies, online streaming">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f1015; color: #ffffff; padding-bottom: 50px; }
@@ -46,9 +48,10 @@
 
     <div class="container">
         <h2 class="section-title">Latest Releases</h2>
-        <div class="movie-grid" id="movieGrid"></div>
-    </div>
 
+        <div class="movie-grid" id="movieGrid"></div>
+
+            
     <div id="videoModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -62,44 +65,99 @@
     </div>
 
     <script>
-        async function fetchMovies() {
-            try {
-                const response = await fetch('./movies.json');
-                const movies = await response.json();
-                const grid = document.getElementById('movieGrid');
-                
-                grid.innerHTML = '';
-                movies.forEach(movie => {
-                    grid.innerHTML += `
-                        <div class="movie-card" onclick="openPlayer('${movie.title}', '${movie.embedUrl}')">
-                            <div class="poster-container">
-                                <img src="${movie.posterUrl}" alt="${movie.title}">
-                                <div class="rating">★ ${movie.rating}</div>
-                            </div>
-                            <div class="movie-info">
-                                <div class="movie-title">${movie.title}</div>
-                                <div class="movie-meta">${movie.year} • ${movie.genre}</div>
-                            </div>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error("Error loading movies:", error);
-            }
-        }
-
         function openPlayer(title, embedUrl) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('videoIframe').src = embedUrl;
             document.getElementById('videoModal').style.display = 'flex';
         }
-
         function closePlayer() {
             document.getElementById('videoModal').style.display = 'none';
             document.getElementById('videoIframe').src = '';
         }
-
-        fetchMovies();
     </script>
+    <script type="module">
+    import { createClient } from 'https://esm.sh/@sanity/client'
+
+    const client = createClient({
+      projectId: 'hbhc4jai',
+      dataset: 'production',
+      useCdn: false,
+      apiVersion: '2024-01-01',
+    });
+
+    async function displayMovies() {
+      try {
+        const query = `*[_type == "movie"]{
+          title,
+          rating,
+          category,
+          embedUrl,
+          description,
+          "posterUrl": poster.asset->url
+        }`;
+        const movies = await client.fetch(query);
+
+        const movieGrid = document.getElementById('movieGrid');
+        if (!movieGrid) return;
+
+        movieGrid.innerHTML = movies.map(movie => `
+          <div class="movie-card" onclick="openPlayer('${movie.title}', '${movie.embedUrl}')">
+            <div class="poster-container">
+              <img src="${movie.posterUrl || 'https://via.placeholder.com/300x400'}" alt="${movie.title}">
+              <div class="rating">★ ${movie.rating || 'N/A'}</div>
+            </div>
+            <div class="movie-info">
+              <div class="movie-title">${movie.title}</div>
+              <div class="movie-meta">${movie.category || 'Movie'}</div>
+            </div>
+          </div>
+        `).join('');
+
+      } catch (error) {
+        console.error('Sanity Fetch Error:', error);
+      }
+    }
+
+    displayMovies();
+  </script>
+  <script type="module">
+  // ১. Sanity থেকে ডাটা ও ছবি আনার জন্য GROQ Query
+  const query = encodeURIComponent(`*[_type == "movie"]{
+    title,
+    releaseYear,
+    rating,
+    genre,
+    "imageUrl": poster.asset->url
+  }`);
+
+  const url = `https://hbhc4jai.api.sanity.io/v2024-01-01/data/query/production?query=${query}`;
+
+  async function displayMovies() {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const movies = data.result;
+
+      const container = document.querySelector('.movies-grid'); // আপনার এইচটিএমএল-এর কার্ড কন্টেইনার ক্লাস
+
+      if (container && movies) {
+        container.innerHTML = movies.map(movie => `
+          <div class="movie-card">
+            <span class="rating">★ ${movie.rating || 'N/A'}</span>
+            <img src="${movie.imageUrl || 'https://via.placeholder.com/300x450'}" alt="${movie.title}">
+            <div class="movie-info">
+              <h3>${movie.title}</h3>
+              <p>${movie.releaseYear || ''} • ${movie.genre || ''}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+    } catch (error) {
+      console.error('Sanity Fetch Error:', error);
+    }
+  }
+
+  displayMovies();
+</script>
 </body>
 </html>

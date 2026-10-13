@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redflix - Watch Movies & TV Shows Online</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        redflix: {
+                            red: '#E50914',
+                            hoverRed: '#B81D24',
+                            dark: '#141414',
+                            cardBg: '#181818',
+                            navBg: 'rgba(20, 20, 20, 0.95)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141414;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #141414;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E50914;
+        }
+
+        /* Hide Scrollbar for Carousels */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Movie Card Hover Effect */
+        .movie-card {
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
+        }
+        .movie-card:hover {
+            transform: scale(1.06);
+            z-index: 20;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Hero Gradient Overlays */
+        .hero-gradient {
+            background: linear-gradient(180deg, rgba(20,20,20,0.2) 0%, rgba(20,20,20,0.7) 60%, #141414 100%),
+                        linear-gradient(90deg, rgba(20,20,20,0.9) 0%, rgba(20,20,20,0.4) 50%, rgba(20,20,20,0.9) 100%);
+        }
+
+        .modal-fade {
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-redflix-dark text-white min-h-screen flex flex-col justify-between">
+
+    <!-- Navigation Header -->
+    <header id="mainNav" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-gradient-to-b from-black/80 via-black/40 to-transparent py-4 px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-8">
+                <a href="#" class="text-3xl font-extrabold tracking-wider text-redflix-red hover:opacity-90 transition flex items-center gap-1">
+                    <i class="fa-solid font-bold"></i>REDFLIX
+                </a>
+                <!-- Desktop Nav Links -->
+                <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-300">
+                    <a href="#" class="text-white hover:text-redflix-red transition">Home</a>
+                    <a href="#trending" class="hover:text-redflix-red transition">Trending</a>
+                    <a href="#action" class="hover:text-redflix-red transition">Action</a>
+                    <a href="#series" class="hover:text-redflix-red transition">Popular Series</a>
+                    <a href="#anime" class="hover:text-redflix-red transition">Anime</a>
+                </nav>
+            </div>
+
+            <!-- Search & Actions Bar -->
+            <div class="flex items-center space-x-4">
+                <!-- Search Box -->
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="Search title, genre..." 
+                        class="bg-black/60 border border-gray-700 focus:border-redflix-red text-white text-sm rounded-full py-2 pl-9 pr-4 w-36 sm:w-64 focus:w-48 sm:focus:w-80 transition-all duration-300 outline-none backdrop-blur-md"
+                        oninput="handleSearch()">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+                </div>
+                
+                <!-- Account Profile Badge -->
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded bg-redflix-red flex items-center justify-center font-bold text-sm shadow-md">
+                        R
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow pb-16">
+        <!-- Hero Featured Movie Banner -->
+        <section id="heroSection" class="relative w-full h-[75vh] sm:h-[85vh] flex items-end pb-12 sm:pb-20 px-4 sm:px-12 bg-cover bg-center transition-all duration-700" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1920&q=80');">
+            <!-- Dark Overlay Gradients -->
+            <div class="absolute inset-0 hero-gradient"></div>
+
+            <!-- Hero Banner Info -->
+            <div class="relative z-10 max-w-2xl space-y-4">
+                <div class="inline-flex items-center space-x-2 bg-redflix-red/20 border border-redflix-red/50 text-redflix-red px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest backdrop-blur-sm">
+                    <i class="fa-solid fa-fire text-xs"></i>
+                    <span>#1 Featured Today</span>
+                </div>
+                
+                <h1 id="heroTitle" class="text-4xl sm:text-6xl font-black tracking-tight drop-shadow-lg text-white">
+                    Cyberpunk: Eclipse
+                </h1>
+
+                <div class="flex items-center space-x-4 text-xs sm:text-sm text-gray-300 font-medium">
+                    <span class="text-green-400 font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-star text-yellow-400"></i> 9.4 Rating
+                    </span>
+                    <span>2026</span>
+                    <span class="border border-gray-600 px-1.5 py-0.5 rounded text-[10px]">4K ULTRA HD</span>
+                    <span>2h 18m</span>
+                    <span class="bg-gray-800 px-2 py-0.5 rounded text-xs text-gray-300">Sci-Fi / Action</span>
+                </div>
+
+                <p id="heroDesc" class="text-gray-300 text-sm sm:text-base line-clamp-3 sm:line-clamp-4 leading-relaxed max-w-xl text-shadow">
+                    In a futuristic metropolis governed by synthetic intelligence, a rogue operative discovers an encrypted code capable of altering human consciousness forever.
+                </p>
+
+                <!-- Hero Action Buttons -->
+                <div class="flex items-center space-x-4 pt-2">
+                    <button onclick="playHeroMovie()" class="flex items-center space-x-2 bg-redflix-red hover:bg-redflix-hoverRed text-white font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-redflix-red/40 transition transform active:scale-95">
+                        <i class="fa-solid fa-play"></i>
+                        <span>Watch Now</span>
+                    </button>
+                    <button onclick="openHeroDetails()" class="flex items-center space-x-2 bg-gray-800/80 hover:bg-gray-700/80 text-white font-semibold px-5 py-3 rounded-lg backdrop-blur-md transition">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>More Info</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top Adsterra Banner Ad Section -->
+        <div class="max-w-7xl mx-auto px-4 my-6">
+            <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-3 text-center flex flex-col items-center justify-center min-h-[90px] relative overflow-hidden group">
+                <span class="text-[10px] text-gray-500 uppercase tracking-widest absolute top-1 right-3">Sponsored / Adsterra</span>
+                <div id="adsterra-banner-728" class="w-full flex items-center justify-center text-xs text-gray-400 py-2">
+                    <script>
+                      atOptions = {
+                        'key' : '29e3faf6bf67bc47ba0a3624702f9685',
+                        'format' : 'iframe',
+                        'height' : 90,
+                        'width' : 728,
+                        'params' : {}
+                      };
+                    </script>
+                    <script src="https://bancadeltempoidea.org/22/29e3faf6bf67bc47ba0a3624702f9685"></script>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results Container (Hidden by default) -->
+        <section id="searchResultsSection" class="hidden max-w-7xl mx-auto px-4 sm:px-8 pt-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-gray-200">Search Results</h2>
+                <button onclick="clearSearch()" class="text-xs text-redflix-red hover:underline">Clear Search</button>
+            </div>
+            <div id="searchResultsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <!-- Search items rendered here -->
+            </div>
+        </section>
+
+        <!-- Standard Movie Category Carousels Container -->
+        <div id="categoryCarousels" class="space-y-8 max-w-7xl mx-auto px-4 sm:px-8 pt-4">
+            
+            <!-- Trending Now Section -->
+            <section id="trending">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                        <span class="w-1 h-5 bg-redflix-red rounded-full"></span> Trending Now
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button onclick="scrollRow('trendingRow', -300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="scrollRow('trendingRow', 300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div id="trendingRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2">
+                    <!-- Dynamic cards -->
+                </div>
+            </section>
+
+            <!-- Action Movies Section -->
+            <section id="action">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                        <span class="w-1 h-5 bg-redflix-red rounded-full"></span> Action Movies
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button onclick="scrollRow('actionRow', -300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="scrollRow('actionRow', 300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div id="actionRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2">
+                    <!-- Dynamic cards -->
+                </div>
+            </section>
+
+            <!-- Middle Native Adsterra Placement Slot -->
+            <div class="my-4">
+                <div class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border border-gray-800 rounded-xl p-4 text-center flex flex-col items-center justify-center min-h-[100px] relative">
+                    <span class="text-[10px] text-gray-500 uppercase tracking-widest absolute top-1 right-3">Sponsored Content</span>
+                    <div class="text-xs text-gray-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-bolt text-yellow-500"></i>
+                        <span>[Adsterra Native / Smart Link Ad Placement Slot]</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Series Section -->
+            <section id="series">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                        <span class="w-1 h-5 bg-redflix-red rounded-full"></span> Popular Series
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button onclick="scrollRow('seriesRow', -300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="scrollRow('seriesRow', 300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div id="seriesRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2">
+                    <!-- Dynamic cards -->
+                </div>
+            </section>
+
+            <!-- Anime Collection Section -->
+            <section id="anime">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                        <span class="w-1 h-5 bg-redflix-red rounded-full"></span> Anime Collection
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button onclick="scrollRow('animeRow', -300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="scrollRow('animeRow', 300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div id="animeRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2">
+                    <!-- Dynamic cards -->
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Video Player Modal Overlay -->
+    <div id="videoModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4 transition-all duration-300">
+        <div class="relative w-full max-w-5xl bg-redflix-cardBg border border-gray-800 rounded-2xl overflow-hidden shadow-2xl modal-fade">
+            <!-- Modal Header / Title bar -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-800 bg-black/50">
+                <div class="flex items-center space-x-3">
+                    <span class="w-2.5 h-2.5 rounded-full bg-redflix-red animate-pulse"></span>
+                    <h3 id="modalMovieTitle" class="text-base sm:text-lg font-bold text-white truncate max-w-md">
+                        Playing Title
+                    </h3>
+                </div>
+                <button onclick="closeVideoModal()" class="w-9 h-9 rounded-full bg-gray-800 hover:bg-redflix-red flex items-center justify-center text-gray-300 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Video Player Area -->
+            <div class="relative aspect-video w-full bg-black">
+                <iframe id="videoPlayerIframe" class="w-full h-full border-0" allowfullscreen allow="autoplay"></iframe>
+            </div>
+
+            <!-- Modal Bottom Details Area -->
+            <div class="p-4 sm:p-6 bg-redflix-dark space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center space-x-3 text-xs text-gray-400">
+                            <span id="modalRating" class="text-yellow-400 font-bold"><i class="fa-solid fa-star"></i> 8.5</span>
+                            <span id="modalYear">2026</span>
+                            <span id="modalGenre" class="bg-gray-800 px-2 py-0.5 rounded text-gray-300">Action</span>
+                        </div>
+                        <p id="modalDescription" class="text-sm text-gray-300 max-w-2xl">
+                            Movie description will load here...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-gray-900 py-8 px-4 sm:px-8 text-gray-500 text-xs">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-lg font-bold text-redflix-red">REDFLIX</span>
+                <span>© 2026 Redflix Inc. All Rights Reserved.</span>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="hover:text-gray-300 transition">Privacy Policy</a>
+                <a href="#" class="hover:text-gray-300 transition">Terms of Service</a>
+                <a href="#" class="hover:text-gray-300 transition">Help Center</a>
+                <a href="https://rana-cineflix.sanity.studio/" target="_blank" class="text-redflix-red hover:underline">Sanity CMS Studio</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sanity API Configuration
+        const SANITY_PROJECT_ID = 'hbhc4jai';
+        const SANITY_DATASET = 'production';
+        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, category, rating, year, embedUrl, "videoUrl": embedUrl}');
+        const SANITY_ENDPOINT = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${SANITY_QUERY}`;
+
+        let allMovies = [];
+
+        async function fetchMovies() {
+            try {
+                const response = await fetch(SANITY_ENDPOINT);
+                const data = await response.json();
+                
+                if (data.result && data.result.length > 0) {
+                    allMovies = data.result.map(m => ({
+                        _id: m._id || Math.random().toString(),
+                        title: m.title || 'Untitled Movie',
+                        genre: m.genre || 'Action',
+                        category: (m.category || m.genre || '').toLowerCase().trim(),
+                        rating: m.rating || '8.5',
+                        year: m.year || '2026',
+                        imageUrl: m.imageUrl || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80',
+                        videoUrl: m.videoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
+                        description: m.description || 'No description available for this title.'
+                    }));
+                }
+            } catch (err) {
+                console.warn('Sanity API connection error:', err);
+            }
+
+            renderAllRows();
+        }
+
+        // Render Card Helper
+        function createMovieCardHTML(movie) {
+            return `
+                <div class="flex-none w-40 sm:w-48 cursor-pointer movie-card group" onclick="openVideoModal('${movie._id}')">
+                    <div class="relative aspect-[2/3] rounded-xl overflow-hidden bg-gray-800 shadow-md">
+                        <img src="${movie.imageUrl}" alt="${movie.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-between p-3">
+                            <div class="flex justify-end">
+                                <span class="bg-redflix-red text-white text-[10px] font-bold px-1.5 py-0.5 rounded">HD</span>
+                            </div>
+                            <div>
+                                <div class="w-8 h-8 rounded-full bg-redflix-red text-white flex items-center justify-center mb-2 mx-auto shadow-lg transform translate-y-4 group-hover:translate-y-0 transition duration-300">
+                                    <i class="fa-solid fa-play text-xs pl-0.5"></i>
+                                </div>
+                                <h4 class="text-xs font-bold text-white truncate">${movie.title}</h4>
+                                <div class="flex items-center justify-between text-[10px] text-gray-300 mt-1">
+                                    <span class="text-yellow-400 font-bold"><i class="fa-solid fa-star"></i> ${movie.rating}</span>
+                                    <span>${movie.year}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Populate Carousels Strictly
+        function renderAllRows() {
+            const trendingRow = document.getElementById('trendingRow');
+            const actionRow = document.getElementById('actionRow');
+            const seriesRow = document.getElementById('seriesRow');
+            const animeRow = document.getElementById('animeRow');
+
+            const trendingMovies = allMovies.filter(m => m.category === 'trending' || m.genre.toLowerCase() === 'trending');
+            const actionMovies = allMovies.filter(m => m.category === 'action' || m.genre.toLowerCase() === 'action');
+            const seriesMovies = allMovies.filter(m => m.category === 'series' || m.genre.toLowerCase() === 'series');
+            const animeMovies = allMovies.filter(m => m.category === 'anime' || m.genre.toLowerCase() === 'anime');
+
+            trendingRow.innerHTML = trendingMovies.length 
+                ? trendingMovies.map(createMovieCardHTML).join('') 
+                : '<p class="text-xs text-gray-500 py-4 pl-2">No trending movies added yet.</p>';
+
+            actionRow.innerHTML = actionMovies.length 
+                ? actionMovies.map(createMovieCardHTML).join('') 
+                : '<p class="text-xs text-gray-500 py-4 pl-2">No action movies added yet.</p>';
+
+            seriesRow.innerHTML = seriesMovies.length 
+                ? seriesMovies.map(createMovieCardHTML).join('') 
+                : '<p class="text-xs text-gray-500 py-4 pl-2">No series added yet.</p>';
+
+            animeRow.innerHTML = animeMovies.length 
+                ? animeMovies.map(createMovieCardHTML).join('') 
+                : '<p class="text-xs text-gray-500 py-4 pl-2">No anime added yet.</p>';
+        }
+
+        // Horizontal Row Scroll
+        function scrollRow(rowId, distance) {
+            const container = document.getElementById(rowId);
+            container.scrollBy({ left: distance, behavior: 'smooth' });
+        }
+
+        // Search Functionality
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const resultsSection = document.getElementById('searchResultsSection');
+            const carouselsSection = document.getElementById('categoryCarousels');
+            const resultsGrid = document.getElementById('searchResultsGrid');
+
+            if (query.length > 0) {
+                const filtered = allMovies.filter(m => 
+                    m.title.toLowerCase().includes(query) || 
+                    m.genre.toLowerCase().includes(query)
+                );
+                
+                resultsGrid.innerHTML = filtered.length > 0 
+                    ? filtered.map(createMovieCardHTML).join('') 
+                    : `<p class="col-span-full text-center text-gray-400 py-8">No movies or series found matching "${query}"</p>`;
+
+                resultsSection.classList.remove('hidden');
+                carouselsSection.classList.add('hidden');
+            } else {
+                clearSearch();
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResultsSection').classList.add('hidden');
+            document.getElementById('categoryCarousels').classList.remove('hidden');
+        }
+
+        // Video Modal Control
+        function openVideoModal(movieId) {
+            const movie = allMovies.find(m => m._id === movieId) || allMovies[0];
+            if (!movie) return;
+            
+            document.getElementById('modalMovieTitle').innerText = movie.title;
+            document.getElementById('modalRating').innerHTML = `<i class="fa-solid fa-star"></i> ${movie.rating}`;
+            document.getElementById('modalYear').innerText = movie.year;
+            document.getElementById('modalGenre').innerText = movie.genre;
+            document.getElementById('modalDescription').innerText = movie.description;
+
+            let embedUrl = movie.videoUrl;
+            if (embedUrl && embedUrl.includes('watch?v=')) {
+                embedUrl = embedUrl.replace('watch?v=', 'embed/');
+            }
+
+            document.getElementById('videoPlayerIframe').src = embedUrl;
+            document.getElementById('videoModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoModal() {
+            document.getElementById('videoPlayerIframe').src = '';
+            document.getElementById('videoModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function playHeroMovie() {
+            openVideoModal(allMovies[0]?._id);
+        }
+
+        function openHeroDetails() {
+            openVideoModal(allMovies[0]?._id);
+        }
+
+        // Initialize App
+        fetchMovies();
+    </script>
+</body>
+</html>

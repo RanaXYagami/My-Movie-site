@@ -360,98 +360,6 @@
         const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, category, rating, year, embedUrl, "videoUrl": embedUrl}');
         const SANITY_ENDPOINT = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${SANITY_QUERY}`;
 
-        // Local Storage / Fallback Movies Dataset
-        const fallbackMovies = [
-            {
-                _id: 'm1',
-                title: 'Cyberpunk: Eclipse',
-                genre: 'Action',
-                category: 'trending',
-                rating: '9.4',
-                year: '2026',
-                imageUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=600&q=80',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
-                description: 'In a futuristic city governed by AI, a lone operative unravels the secret of neural hacks.'
-            },
-            {
-                _id: 'm2',
-                title: 'Shadow Realm',
-                genre: 'Action',
-                category: 'action',
-                rating: '8.8',
-                year: '2025',
-                imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
-                description: 'Ancient forces awaken in modern Tokyo, forcing warriors from opposite sides to unite.'
-            },
-            {
-                _id: 'm3',
-                title: 'Interstellar Horizons',
-                genre: 'Sci-Fi',
-                category: 'trending',
-                rating: '9.1',
-                year: '2026',
-                imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
-                description: 'A deep space crew encounters an uncharted wormhole carrying distress signals from Earth.'
-            },
-            {
-                _id: 'm4',
-                title: 'Neon Samurai',
-                genre: 'Anime',
-                category: 'anime',
-                rating: '9.0',
-                year: '2025',
-                imageUrl: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
-                description: 'A blade-for-hire fights through syndicate-controlled sectors to avenge his fallen clan.'
-            },
-            {
-                _id: 'm5',
-                title: 'The Last Colony',
-                genre: 'Drama',
-                category: 'series',
-                rating: '8.6',
-                year: '2024',
-                imageUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
-                description: 'Surviving human outposts battle harsh climate shifts and political intrigue on Mars.'
-            },
-            {
-                _id: 'm6',
-                title: 'Ghost Protocol 9',
-                genre: 'Action',
-                category: 'action',
-                rating: '8.7',
-                year: '2026',
-                imageUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
-                description: 'Special forces infiltrate an uncharted island containing lost military bioweapons.'
-            },
-            {
-                _id: 'm7',
-                title: 'Chrono Blade',
-                genre: 'Anime',
-                category: 'anime',
-                rating: '9.3',
-                year: '2026',
-                imageUrl: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
-                description: 'Time-bending martial artists fight across multiple eras to fix broken timelines.'
-            },
-            {
-                _id: 'm8',
-                title: 'Vanguard Dynasty',
-                genre: 'Drama',
-                category: 'series',
-                rating: '8.9',
-                year: '2025',
-                imageUrl: 'https://images.unsplash.com/photo-1514539079130-25950c84af65?auto=format&fit=crop&w=600&q=80',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
-                description: 'High-stakes corporate warfare amidst global technological rivalries.'
-            }
-        ];
-
         let allMovies = [];
 
         async function fetchMovies() {
@@ -464,19 +372,16 @@
                         _id: m._id || Math.random().toString(),
                         title: m.title || 'Untitled Movie',
                         genre: m.genre || 'Action',
-                        category: (m.category || m.genre || 'action').toLowerCase(),
+                        category: (m.category || m.genre || '').toLowerCase().trim(),
                         rating: m.rating || '8.5',
                         year: m.year || '2026',
                         imageUrl: m.imageUrl || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80',
                         videoUrl: m.videoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
                         description: m.description || 'No description available for this title.'
                     }));
-                } else {
-                    allMovies = fallbackMovies;
                 }
             } catch (err) {
-                console.warn('Sanity API connection used fallbacks:', err);
-                allMovies = fallbackMovies;
+                console.warn('Sanity API connection error:', err);
             }
 
             renderAllRows();
@@ -508,22 +413,33 @@
             `;
         }
 
-        // Populate Carousels
+        // Populate Carousels Strictly
         function renderAllRows() {
             const trendingRow = document.getElementById('trendingRow');
             const actionRow = document.getElementById('actionRow');
             const seriesRow = document.getElementById('seriesRow');
             const animeRow = document.getElementById('animeRow');
 
-            const trendingMovies = allMovies.filter(m => m.category === 'trending' || m.category === 'trend');
-            const actionMovies = allMovies.filter(m => m.category === 'action' || m.genre.toLowerCase().includes('action'));
-            const seriesMovies = allMovies.filter(m => m.category === 'series' || m.category === 'popular series' || m.genre.toLowerCase().includes('series') || m.genre.toLowerCase().includes('drama'));
-            const animeMovies = allMovies.filter(m => m.category === 'anime' || m.genre.toLowerCase().includes('anime'));
+            const trendingMovies = allMovies.filter(m => m.category === 'trending' || m.genre.toLowerCase() === 'trending');
+            const actionMovies = allMovies.filter(m => m.category === 'action' || m.genre.toLowerCase() === 'action');
+            const seriesMovies = allMovies.filter(m => m.category === 'series' || m.genre.toLowerCase() === 'series');
+            const animeMovies = allMovies.filter(m => m.category === 'anime' || m.genre.toLowerCase() === 'anime');
 
-            trendingRow.innerHTML = (trendingMovies.length ? trendingMovies : allMovies).map(createMovieCardHTML).join('');
-            actionRow.innerHTML = (actionMovies.length ? actionMovies : allMovies).map(createMovieCardHTML).join('');
-            seriesRow.innerHTML = (seriesMovies.length ? seriesMovies : allMovies).map(createMovieCardHTML).join('');
-            animeRow.innerHTML = (animeMovies.length ? animeMovies : allMovies).map(createMovieCardHTML).join('');
+            trendingRow.innerHTML = trendingMovies.length 
+                ? trendingMovies.map(createMovieCardHTML).join('') 
+                : '<p class="text-xs text-gray-500 py-4 pl-2">No trending movies added yet.</p>';
+
+            actionRow.innerHTML = actionMovies.length 
+                ? actionMovies.map(createMovieCardHTML).join('') 
+                : '<p class="text-xs text-gray-500 py-4 pl-2">No action movies added yet.</p>';
+
+            seriesRow.innerHTML = seriesMovies.length 
+                ? seriesMovies.map(createMovieCardHTML).join('') 
+                : '<p class="text-xs text-gray-500 py-4 pl-2">No series added yet.</p>';
+
+            animeRow.innerHTML = animeMovies.length 
+                ? animeMovies.map(createMovieCardHTML).join('') 
+                : '<p class="text-xs text-gray-500 py-4 pl-2">No anime added yet.</p>';
         }
 
         // Horizontal Row Scroll
@@ -565,6 +481,7 @@
         // Video Modal Control
         function openVideoModal(movieId) {
             const movie = allMovies.find(m => m._id === movieId) || allMovies[0];
+            if (!movie) return;
             
             document.getElementById('modalMovieTitle').innerText = movie.title;
             document.getElementById('modalRating').innerHTML = `<i class="fa-solid fa-star"></i> ${movie.rating}`;
@@ -573,7 +490,7 @@
             document.getElementById('modalDescription').innerText = movie.description;
 
             let embedUrl = movie.videoUrl;
-            if (embedUrl.includes('watch?v=')) {
+            if (embedUrl && embedUrl.includes('watch?v=')) {
                 embedUrl = embedUrl.replace('watch?v=', 'embed/');
             }
 
@@ -589,11 +506,11 @@
         }
 
         function playHeroMovie() {
-            openVideoModal(allMovies[0]?._id || 'm1');
+            openVideoModal(allMovies[0]?._id);
         }
 
         function openHeroDetails() {
-            openVideoModal(allMovies[0]?._id || 'm1');
+            openVideoModal(allMovies[0]?._id);
         }
 
         // Initialize App

@@ -357,7 +357,7 @@
         // Sanity API Configuration
         const SANITY_PROJECT_ID = 'hbhc4jai';
         const SANITY_DATASET = 'production';
-        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, category, rating, year, embedUrl, "videoUrl": embedUrl}');
+        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, rating, year, embedUrl, "videoUrl": embedUrl}');
         const SANITY_ENDPOINT = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${SANITY_QUERY}`;
 
         // Local Storage / Fallback Movies Dataset
@@ -464,7 +464,7 @@
                         _id: m._id || Math.random().toString(),
                         title: m.title || 'Untitled Movie',
                         genre: m.genre || 'Action',
-                        category: (m.category || m.genre || 'action').toLowerCase(),
+                        category: (m.genre || 'action').toLowerCase(),
                         rating: m.rating || '8.5',
                         year: m.year || '2026',
                         imageUrl: m.imageUrl || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80',
@@ -515,15 +515,10 @@
             const seriesRow = document.getElementById('seriesRow');
             const animeRow = document.getElementById('animeRow');
 
-            const trendingMovies = allMovies.filter(m => m.category === 'trending' || m.category === 'trend');
-            const actionMovies = allMovies.filter(m => m.category === 'action' || m.genre.toLowerCase().includes('action'));
-            const seriesMovies = allMovies.filter(m => m.category === 'series' || m.category === 'popular series' || m.genre.toLowerCase().includes('series') || m.genre.toLowerCase().includes('drama'));
-            const animeMovies = allMovies.filter(m => m.category === 'anime' || m.genre.toLowerCase().includes('anime'));
-
-            trendingRow.innerHTML = (trendingMovies.length ? trendingMovies : allMovies).map(createMovieCardHTML).join('');
-            actionRow.innerHTML = (actionMovies.length ? actionMovies : allMovies).map(createMovieCardHTML).join('');
-            seriesRow.innerHTML = (seriesMovies.length ? seriesMovies : allMovies).map(createMovieCardHTML).join('');
-            animeRow.innerHTML = (animeMovies.length ? animeMovies : allMovies).map(createMovieCardHTML).join('');
+            trendingRow.innerHTML = allMovies.map(createMovieCardHTML).join('');
+            actionRow.innerHTML = allMovies.filter(m => m.genre.toLowerCase().includes('action') || m.category === 'action').concat(allMovies).slice(0, 8).map(createMovieCardHTML).join('');
+            seriesRow.innerHTML = allMovies.filter(m => m.genre.toLowerCase().includes('series') || m.genre.toLowerCase().includes('drama')).concat(allMovies).slice(0, 8).map(createMovieCardHTML).join('');
+            animeRow.innerHTML = allMovies.filter(m => m.genre.toLowerCase().includes('anime')).concat(allMovies).slice(0, 8).map(createMovieCardHTML).join('');
         }
 
         // Horizontal Row Scroll
@@ -572,6 +567,7 @@
             document.getElementById('modalGenre').innerText = movie.genre;
             document.getElementById('modalDescription').innerText = movie.description;
 
+            // Safe video URL conversion for YouTube/Iframe
             let embedUrl = movie.videoUrl;
             if (embedUrl.includes('watch?v=')) {
                 embedUrl = embedUrl.replace('watch?v=', 'embed/');
@@ -596,8 +592,22 @@
             openVideoModal(allMovies[0]?._id || 'm1');
         }
 
-        // Initialize App
-        fetchMovies();
+        // Navbar Scroll Styling
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-redflix-dark', 'shadow-lg');
+                nav.classList.remove('bg-gradient-to-b');
+            } else {
+                nav.classList.remove('bg-redflix-dark', 'shadow-lg');
+                nav.classList.add('bg-gradient-to-b');
+            }
+        });
+
+        // Initialize App on Load
+        window.onload = function() {
+            fetchMovies();
+        };
     </script>
 </body>
 </html>

@@ -357,7 +357,7 @@
         // Sanity API Configuration
         const SANITY_PROJECT_ID = 'hbhc4jai';
         const SANITY_DATASET = 'production';
-        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, rating, year, videoUrl, description}');
+        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, rating, year, embedUrl, "videoUrl": embedUrl}');
         const SANITY_ENDPOINT = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${SANITY_QUERY}`;
 
         // Local Storage / Fallback Movies Dataset

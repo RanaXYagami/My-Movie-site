@@ -89,18 +89,18 @@
     <!-- Navigation Header -->
     <header id="mainNav" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-gradient-to-b from-black/80 via-black/40 to-transparent py-4 px-4 sm:px-8">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-            <!-- Brand Logo -->
+            <!-- Brand Logo (Clicking Returns Home) -->
             <div class="flex items-center space-x-8">
-                <a href="#" class="text-3xl font-extrabold tracking-wider text-redflix-red hover:opacity-90 transition flex items-center gap-1">
-                    <i class="fa-solid font-bold"></i>RANA
-                </a>
+                <button onclick="goBackToHome()" class="text-3xl font-extrabold tracking-wider text-redflix-red hover:opacity-90 transition flex items-center gap-1">
+                    RANA
+                </button>
                 <!-- Desktop Nav Links -->
                 <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-300">
-                    <a href="#" class="text-white hover:text-redflix-red transition">Home</a>
-                    <a href="#trending" class="hover:text-redflix-red transition">Trending</a>
-                    <a href="#action" class="hover:text-redflix-red transition">Action</a>
-                    <a href="#series" class="hover:text-redflix-red transition">Popular Series</a>
-                    <a href="#anime" class="hover:text-redflix-red transition">Anime</a>
+                    <button onclick="goBackToHome()" class="text-white hover:text-redflix-red transition">Home</button>
+                    <a href="#trending" onclick="goBackToHome()" class="hover:text-redflix-red transition">Trending</a>
+                    <a href="#action" onclick="goBackToHome()" class="hover:text-redflix-red transition">Action</a>
+                    <a href="#series" onclick="goBackToHome()" class="hover:text-redflix-red transition">Popular Series</a>
+                    <a href="#anime" onclick="goBackToHome()" class="hover:text-redflix-red transition">Anime</a>
                 </nav>
             </div>
 
@@ -270,15 +270,18 @@
 
         </div>
 
-        <!-- Dedicated Full Watch Page Section (Rtally Style) -->
-        <section id="movieWatchPage" class="hidden max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-8">
-            <!-- Back Button -->
-            <div class="flex items-center space-x-2 text-xs text-gray-400">
-                <button onclick="goBackToHome()" class="hover:text-redflix-red font-bold flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-left"></i> Home
+        <!-- Dedicated Full Watch Page Section -->
+        <section id="movieWatchPage" class="hidden max-w-7xl mx-auto px-4 sm:px-8 pt-24 pb-8 space-y-6">
+            
+            <!-- Clear Prominent Back Button Bar -->
+            <div class="flex items-center justify-between bg-gray-900/80 border border-gray-800 px-4 py-3 rounded-xl">
+                <button onclick="goBackToHome()" class="flex items-center space-x-2 bg-redflix-red hover:bg-redflix-hoverRed text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-lg transition shadow-md active:scale-95">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Home</span>
                 </button>
-                <span>/</span>
-                <span id="pageMovieTitleBreadcrumb" class="text-gray-200">Movie</span>
+                <div class="text-xs text-gray-400 truncate max-w-[200px] sm:max-w-xs">
+                    Watching: <span id="pageMovieTitleBreadcrumb" class="text-white font-bold">Movie</span>
+                </div>
             </div>
 
             <!-- Video Player Screen -->
@@ -421,7 +424,7 @@
             });
         }
 
-        // Populate Carousels with Flexible Category Matching Support
+        // Populate Carousels
         function renderAllRows() {
             const trendingRow = document.getElementById('trendingRow');
             const actionRow = document.getElementById('actionRow');
@@ -475,7 +478,7 @@
             document.getElementById('categoryCarousels').classList.remove('hidden');
         }
 
-        // Open Dedicated Movie Page (Rtally Style)
+        // Open Dedicated Movie Page
         function openMoviePage(movieId) {
             const movie = allMovies.find(m => m._id === movieId) || allMovies[0];
             if (!movie) return;
@@ -510,6 +513,8 @@
             document.getElementById('movieWatchPage').classList.add('hidden');
             document.getElementById('heroSection').classList.remove('hidden');
             document.getElementById('categoryCarousels').classList.remove('hidden');
+            clearSearch();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function playHeroMovie() {

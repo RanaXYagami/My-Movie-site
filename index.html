@@ -275,7 +275,7 @@
             
             <!-- Clear Prominent Back Button Bar -->
             <div class="flex items-center justify-between bg-gray-900/80 border border-gray-800 px-4 py-3 rounded-xl">
-                <button onclick="goBackToHome()" class="flex items-center space-x-2 bg-redflix-red hover:bg-redflix-hoverRed text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-lg transition shadow-md active:scale-95">
+                <button type="button" onclick="goBackToHome()" class="flex items-center space-x-2 bg-redflix-red hover:bg-redflix-hoverRed text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-lg transition shadow-md active:scale-95 cursor-pointer z-20">
                     <i class="fa-solid fa-arrow-left"></i>
                     <span>Back to Home</span>
                 </button>
@@ -385,7 +385,7 @@
             renderAllRows();
         }
 
-        // Render Card Helper with openMoviePage
+        // Render Card Helper
         function createMovieCardHTML(movie) {
             return `
                 <div class="flex-none w-40 sm:w-48 cursor-pointer movie-card group" onclick="openMoviePage('${movie._id}')">
@@ -478,7 +478,7 @@
             document.getElementById('categoryCarousels').classList.remove('hidden');
         }
 
-        // Open Dedicated Movie Page
+        // Open Dedicated Movie Page (With Browser History Integration)
         function openMoviePage(movieId) {
             const movie = allMovies.find(m => m._id === movieId) || allMovies[0];
             if (!movie) return;
@@ -505,17 +505,35 @@
             document.getElementById('movieWatchPage').classList.remove('hidden');
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Push Hash state so Back button works natively
+            if (window.location.hash !== '#watch') {
+                window.location.hash = 'watch';
+            }
         }
 
-        // Back to Home
+        // Back to Home Function
         function goBackToHome() {
             document.getElementById('pageVideoPlayerIframe').src = '';
             document.getElementById('movieWatchPage').classList.add('hidden');
             document.getElementById('heroSection').classList.remove('hidden');
             document.getElementById('categoryCarousels').classList.remove('hidden');
             clearSearch();
+            
+            // Clear URL Hash
+            if (window.location.hash === '#watch') {
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // Listen for Browser Back/Forward Buttons
+        window.addEventListener('popstate', function() {
+            if (window.location.hash !== '#watch') {
+                goBackToHome();
+            }
+        });
 
         function playHeroMovie() {
             openMoviePage(allMovies[0]?._id);

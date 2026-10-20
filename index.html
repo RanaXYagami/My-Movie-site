@@ -352,7 +352,7 @@
         // Sanity API Configuration
         const SANITY_PROJECT_ID = 'hbhc4jai';
         const SANITY_DATASET = 'production';
-        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, category, rating, year, embedUrl, "videoUrl": embedUrl, description}');
+        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, category, imdbRating, year, embedUrl, "videoUrl": embedUrl, overview, description}');
         const SANITY_ENDPOINT = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${SANITY_QUERY}`;
 
         let allMovies = [];
@@ -367,12 +367,12 @@
                         _id: m._id || Math.random().toString(),
                         title: m.title || 'Untitled Movie',
                         genre: m.genre || 'Action',
-                        category: (m.category || m.genre || '').toLowerCase().trim(),
-                        rating: m.rating || '8.5',
+                        category: m.category || [],
+                        rating: m.imdbRating || '8.5',
                         year: m.year || '2026',
                         imageUrl: m.imageUrl || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80',
                         videoUrl: m.videoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
-                        description: m.description || 'No description available for this title.'
+                        description: m.overview || m.description || 'No description available for this title.'
                     }));
                 }
             } catch (err) {
@@ -408,17 +408,26 @@
             `;
         }
 
-        // Populate Carousels
+        // Helper function to check multiple categories safely
+        function hasCategory(movie, targetCat) {
+            if (!movie.category) return false;
+            if (Array.isArray(movie.category)) {
+                return movie.category.map(c => c.toLowerCase()).includes(targetCat.toLowerCase());
+            }
+            return movie.category.toLowerCase() === targetCat.toLowerCase();
+        }
+
+        // Populate Carousels with Multiple Category Support
         function renderAllRows() {
             const trendingRow = document.getElementById('trendingRow');
             const actionRow = document.getElementById('actionRow');
             const seriesRow = document.getElementById('seriesRow');
             const animeRow = document.getElementById('animeRow');
 
-            const trendingMovies = allMovies.filter(m => m.category === 'trending' || m.genre.toLowerCase() === 'trending');
-            const actionMovies = allMovies.filter(m => m.category === 'action' || m.genre.toLowerCase() === 'action');
-            const seriesMovies = allMovies.filter(m => m.category === 'series' || m.genre.toLowerCase() === 'series');
-            const animeMovies = allMovies.filter(m => m.category === 'anime' || m.genre.toLowerCase() === 'anime');
+            const trendingMovies = allMovies.filter(m => hasCategory(m, 'trending'));
+            const actionMovies = allMovies.filter(m => hasCategory(m, 'action'));
+            const seriesMovies = allMovies.filter(m => hasCategory(m, 'series') || hasCategory(m, 'popular series'));
+            const animeMovies = allMovies.filter(m => hasCategory(m, 'anime'));
 
             trendingRow.innerHTML = trendingMovies.length 
                 ? trendingMovies.map(createMovieCardHTML).join('') 

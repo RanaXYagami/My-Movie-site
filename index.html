@@ -58,7 +58,6 @@
             background: #E50914;
         }
 
-        /* Hide Scrollbar for Carousels */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -67,7 +66,6 @@
             scrollbar-width: none;
         }
 
-        /* Movie Card Hover Effect */
         .movie-card {
             transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
         }
@@ -77,7 +75,6 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
         }
 
-        /* Hero Gradient Overlays */
         .hero-gradient {
             background: linear-gradient(180deg, rgba(20,20,20,0.2) 0%, rgba(20,20,20,0.7) 60%, #141414 100%),
                         linear-gradient(90deg, rgba(20,20,20,0.9) 0%, rgba(20,20,20,0.4) 50%, rgba(20,20,20,0.9) 100%);
@@ -89,12 +86,10 @@
     <!-- Navigation Header -->
     <header id="mainNav" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-gradient-to-b from-black/80 via-black/40 to-transparent py-4 px-4 sm:px-8">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-            <!-- Brand Logo (Clicking Returns Home) -->
             <div class="flex items-center space-x-8">
                 <button onclick="goBackToHome()" class="text-3xl font-extrabold tracking-wider text-redflix-red hover:opacity-90 transition flex items-center gap-1">
                     RANA
                 </button>
-                <!-- Desktop Nav Links -->
                 <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-300">
                     <button onclick="goBackToHome()" class="text-white hover:text-redflix-red transition">Home</button>
                     <a href="#trending" onclick="goBackToHome()" class="hover:text-redflix-red transition">Trending</a>
@@ -104,9 +99,7 @@
                 </nav>
             </div>
 
-            <!-- Search & Actions Bar -->
             <div class="flex items-center space-x-4">
-                <!-- Search Box -->
                 <div class="relative">
                     <input type="text" id="searchInput" placeholder="Search title, genre..." 
                         class="bg-black/60 border border-gray-700 focus:border-redflix-red text-white text-sm rounded-full py-2 pl-9 pr-4 w-36 sm:w-64 focus:w-48 sm:focus:w-80 transition-all duration-300 outline-none backdrop-blur-md"
@@ -114,7 +107,6 @@
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-sm"></i>
                 </div>
                 
-                <!-- Account Profile Badge -->
                 <div class="flex items-center space-x-2">
                     <div class="w-8 h-8 rounded bg-redflix-red flex items-center justify-center font-bold text-sm shadow-md">
                         R
@@ -129,10 +121,8 @@
         
         <!-- Hero Featured Movie Banner -->
         <section id="heroSection" class="relative w-full h-[75vh] sm:h-[85vh] flex items-end pb-12 sm:pb-20 px-4 sm:px-12 bg-cover bg-center transition-all duration-700" style="background-image: url('https://cdn.discordapp.com/attachments/1375166818087604366/1562060763093540894/IMG_20261020_171123.jpg?ex=6ad89df3&is=6ad74c73&hm=ff60dec3c7664f6584adbf2fc4314bd3d05be9694a3c92e57064aee0d4cf6f79&');">
-            <!-- Dark Overlay Gradients -->
             <div class="absolute inset-0 hero-gradient"></div>
 
-            <!-- Hero Banner Info -->
             <div class="relative z-10 max-w-2xl space-y-4">
                 <div class="inline-flex items-center space-x-2 bg-redflix-red/20 border border-redflix-red/50 text-redflix-red px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest backdrop-blur-sm">
                     <i class="fa-solid fa-fire text-xs"></i>
@@ -157,7 +147,6 @@
                     In a futuristic metropolis governed by synthetic intelligence, a rogue operative discovers an encrypted code capable of altering human consciousness forever.
                 </p>
 
-                <!-- Hero Action Buttons -->
                 <div class="flex items-center space-x-4 pt-2">
                     <button onclick="playHeroMovie()" class="flex items-center space-x-2 bg-redflix-red hover:bg-redflix-hoverRed text-white font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-redflix-red/40 transition transform active:scale-95">
                         <i class="fa-solid fa-play"></i>
@@ -190,21 +179,19 @@
             </div>
         </div>
 
-        <!-- Search Results Container (Hidden by default) -->
+        <!-- Search Results Container -->
         <section id="searchResultsSection" class="hidden max-w-7xl mx-auto px-4 sm:px-8 pt-6">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xl font-bold text-gray-200">Search Results</h2>
                 <button onclick="clearSearch()" class="text-xs text-redflix-red hover:underline">Clear Search</button>
             </div>
-            <div id="searchResultsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                <!-- Search items rendered here -->
-            </div>
+            <div id="searchResultsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
         </section>
 
         <!-- Standard Movie Category Carousels Container -->
         <div id="categoryCarousels" class="space-y-8 max-w-7xl mx-auto px-4 sm:px-8 pt-4">
             
-            <!-- Trending Now Section -->
+            <!-- Trending Now -->
             <section id="trending">
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
@@ -215,12 +202,10 @@
                         <button onclick="scrollRow('trendingRow', 300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                 </div>
-                <div id="trendingRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2">
-                    <!-- Dynamic cards -->
-                </div>
+                <div id="trendingRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2"></div>
             </section>
 
-            <!-- Action Movies Section -->
+            <!-- Action Movies -->
             <section id="action">
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
@@ -231,12 +216,10 @@
                         <button onclick="scrollRow('actionRow', 300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                 </div>
-                <div id="actionRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2">
-                    <!-- Dynamic cards -->
-                </div>
+                <div id="actionRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2"></div>
             </section>
 
-            <!-- Popular Series Section -->
+            <!-- Popular Series -->
             <section id="series">
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
@@ -247,12 +230,10 @@
                         <button onclick="scrollRow('seriesRow', 300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                 </div>
-                <div id="seriesRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2">
-                    <!-- Dynamic cards -->
-                </div>
+                <div id="seriesRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2"></div>
             </section>
 
-            <!-- Anime Collection Section -->
+            <!-- Anime Collection -->
             <section id="anime">
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
@@ -263,17 +244,14 @@
                         <button onclick="scrollRow('animeRow', 300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                 </div>
-                <div id="animeRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2">
-                    <!-- Dynamic cards -->
-                </div>
+                <div id="animeRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2"></div>
             </section>
 
         </div>
 
-        <!-- Dedicated Full Watch Page Section -->
+        <!-- Dedicated Watch Page Section -->
         <section id="movieWatchPage" class="hidden max-w-7xl mx-auto px-4 sm:px-8 pt-24 pb-8 space-y-6">
             
-            <!-- Clear Prominent Back Button Bar -->
             <div class="flex items-center justify-between bg-gray-900/80 border border-gray-800 px-4 py-3 rounded-xl">
                 <button type="button" onclick="goBackToHome()" class="flex items-center space-x-2 bg-redflix-red hover:bg-redflix-hoverRed text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-lg transition shadow-md active:scale-95 cursor-pointer z-20">
                     <i class="fa-solid fa-arrow-left"></i>
@@ -284,12 +262,30 @@
                 </div>
             </div>
 
+            <!-- Notice Banner -->
+            <div class="text-center text-xs text-gray-400 bg-gray-900/40 p-2 rounded-lg border border-gray-800">
+                ভিডিও সার্ভার আমাদের নিয়ন্ত্রণে নয়, তাই অ্যাডস কম-বেশি হতে পারে। বেশি হলে ডাউনলোড করে দেখুন।
+            </div>
+
+            <!-- Server Selectors Box (Dynamic) -->
+            <div id="serverContainer" class="hidden bg-gray-900/80 border border-gray-800 rounded-2xl p-5 text-center space-y-4">
+                <h4 class="text-xs sm:text-sm font-extrabold text-gray-300 uppercase tracking-widest">
+                    SELECT SERVER / সার্ভার নির্বাচন করুন
+                </h4>
+                <div id="serverButtonsArea" class="flex flex-wrap items-center justify-center gap-6 pt-2"></div>
+            </div>
+
+            <!-- Episodes List Grid (Dynamic 1-120+) -->
+            <div id="episodeContainer" class="hidden bg-gray-900/60 border border-gray-800 rounded-2xl p-5 text-center space-y-4">
+                <div id="episodeButtonsGrid" class="grid grid-cols-5 sm:grid-cols-10 md:grid-cols-12 gap-2 max-h-60 overflow-y-auto p-1"></div>
+            </div>
+
             <!-- Video Player Screen -->
             <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-gray-800 shadow-2xl">
                 <iframe id="pageVideoPlayerIframe" class="w-full h-full border-0" allowfullscreen allow="autoplay"></iframe>
             </div>
 
-            <!-- Download & Social Hub Box (3 Buttons Layout) -->
+            <!-- Download & Social Hub Box -->
             <div class="bg-gray-900/60 border border-gray-800 rounded-2xl p-6 text-center space-y-4">
                 <h3 class="text-sm font-extrabold text-redflix-red uppercase tracking-wider">HOW TO DOWNLOAD??</h3>
                 <p class="text-xs text-gray-400">Click on the logo to see Download Process</p>
@@ -298,19 +294,16 @@
                 </button>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
-                    <!-- Telegram Link -->
                     <a href="YOUR_TELEGRAM_LINK_HERE" target="_blank" class="bg-gray-800/80 border border-gray-700 hover:border-redflix-red p-3 rounded-xl flex items-center justify-center space-x-2 text-xs font-bold transition">
                         <i class="fa-brands fa-telegram text-sky-400"></i>
                         <span>Join TELEGRAM</span>
                     </a>
 
-                    <!-- Facebook Link -->
                     <a href="YOUR_FACEBOOK_LINK_HERE" target="_blank" class="bg-gray-800/80 border border-gray-700 hover:border-redflix-red p-3 rounded-xl flex items-center justify-center space-x-2 text-xs font-bold transition">
                         <i class="fa-brands fa-facebook text-blue-500"></i>
                         <span>Join FACEBOOK</span>
                     </a>
 
-                    <!-- Anime Hub Link -->
                     <a href="#" target="_blank" class="bg-gray-800/80 border border-gray-700 hover:border-redflix-red p-3 rounded-xl flex items-center justify-center space-x-2 text-xs font-bold transition">
                         <i class="fa-solid fa-film text-emerald-400"></i>
                         <span>ANIME HUB</span>
@@ -352,13 +345,14 @@
     </footer>
 
     <script>
-        // Sanity API Configuration
         const SANITY_PROJECT_ID = 'hbhc4jai';
         const SANITY_DATASET = 'production';
-        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, category, imdbRating, year, embedUrl, "videoUrl": embedUrl, overview, description}');
+        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, category, imdbRating, year, embedUrl, "videoUrl": embedUrl, overview, description, isSeries, episodes}');
         const SANITY_ENDPOINT = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${SANITY_QUERY}`;
 
         let allMovies = [];
+        let currentSelectedMovie = null;
+        let currentActiveEpisodeIndex = 0;
 
         async function fetchMovies() {
             try {
@@ -374,23 +368,24 @@
                         rating: m.imdbRating || '8.5',
                         year: m.year || '2026',
                         imageUrl: m.imageUrl || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80',
-                        videoUrl: m.videoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
-                        description: m.overview || m.description || 'No description available for this title.'
+                        videoUrl: m.videoUrl || m.embedUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
+                        description: m.overview || m.description || 'No description available.',
+                        isSeries: m.isSeries || false,
+                        episodes: m.episodes || []
                     }));
                 }
             } catch (err) {
-                console.warn('Sanity API connection error:', err);
+                console.warn('Sanity API error:', err);
             }
 
             renderAllRows();
         }
 
-        // Render Card Helper
         function createMovieCardHTML(movie) {
             return `
                 <div class="flex-none w-40 sm:w-48 cursor-pointer movie-card group" onclick="openMoviePage('${movie._id}')">
                     <div class="relative aspect-[2/3] rounded-xl overflow-hidden bg-gray-800 shadow-md">
-                        <img src="${movie.imageUrl}" alt="${movie.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80'">
+                        <img src="${movie.imageUrl}" alt="${movie.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-between p-3">
                             <div class="flex justify-end">
                                 <span class="bg-redflix-red text-white text-[10px] font-bold px-1.5 py-0.5 rounded">HD</span>
@@ -411,7 +406,6 @@
             `;
         }
 
-        // Flexible Category Matching Helper
         function hasCategory(movie, targetCat) {
             if (!movie.category) return false;
             const target = targetCat.toLowerCase().trim();
@@ -424,7 +418,6 @@
             });
         }
 
-        // Populate Carousels
         function renderAllRows() {
             const trendingRow = document.getElementById('trendingRow');
             const actionRow = document.getElementById('actionRow');
@@ -442,13 +435,11 @@
             if (animeRow) animeRow.innerHTML = animeMovies.length ? animeMovies.map(createMovieCardHTML).join('') : '<p class="text-xs text-gray-500 py-4 pl-2">No anime added yet.</p>';
         }
 
-        // Horizontal Row Scroll
         function scrollRow(rowId, distance) {
             const container = document.getElementById(rowId);
             container.scrollBy({ left: distance, behavior: 'smooth' });
         }
 
-        // Search Functionality
         function handleSearch() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             const resultsSection = document.getElementById('searchResultsSection');
@@ -478,10 +469,13 @@
             document.getElementById('categoryCarousels').classList.remove('hidden');
         }
 
-        // Open Dedicated Movie Page (With Browser History Integration)
+        // Open Movie / Series Page with Episodes & Server UI
         function openMoviePage(movieId) {
             const movie = allMovies.find(m => m._id === movieId) || allMovies[0];
             if (!movie) return;
+
+            currentSelectedMovie = movie;
+            currentActiveEpisodeIndex = 0;
 
             document.getElementById('pageMovieTitle').innerText = movie.title;
             document.getElementById('pageMovieTitleBreadcrumb').innerText = movie.title;
@@ -491,14 +485,20 @@
             document.getElementById('pageMovieGenre').innerText = movie.genre;
             document.getElementById('pageMoviePoster').src = movie.imageUrl;
 
-            let embedUrl = movie.videoUrl;
-            if (embedUrl && embedUrl.includes('watch?v=')) {
-                embedUrl = embedUrl.replace('watch?v=', 'embed/');
+            const serverContainer = document.getElementById('serverContainer');
+            const episodeContainer = document.getElementById('episodeContainer');
+
+            if (movie.isSeries && movie.episodes && movie.episodes.length > 0) {
+                serverContainer.classList.remove('hidden');
+                episodeContainer.classList.remove('hidden');
+                renderEpisodesUI();
+                selectEpisode(0);
+            } else {
+                serverContainer.classList.add('hidden');
+                episodeContainer.classList.add('hidden');
+                loadVideoIframe(movie.videoUrl);
             }
 
-            document.getElementById('pageVideoPlayerIframe').src = embedUrl;
-
-            // Hide Home & Show Watch Page
             document.getElementById('heroSection').classList.add('hidden');
             document.getElementById('categoryCarousels').classList.add('hidden');
             document.getElementById('searchResultsSection').classList.add('hidden');
@@ -506,44 +506,145 @@
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // Push Hash state so Back button works natively
             if (window.location.hash !== '#watch') {
                 window.location.hash = 'watch';
             }
         }
 
-        // Back to Home Function
-        function goBackToHome() {
+        // Render Episodes 1-120+ Buttons
+        function renderEpisodesUI() {
+            const grid = document.getElementById('episodeButtonsGrid');
+            if (!currentSelectedMovie || !currentSelectedMovie.episodes) return;
+
+            let html = '';
+            currentSelectedMovie.episodes.forEach((ep, index) => {
+                const epNum = ep.episodeNumber || (index + 1);
+                html += `
+                    <button id="ep-btn-${index}" onclick="selectEpisode(${index})" 
+                        class="ep-btn bg-gray-800 hover:bg-cyan-600 text-white font-bold p-2.5 rounded-lg text-xs transition duration-200 shadow border border-gray-700/50">
+                        ${epNum}
+                    </button>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        // Select Episode & Render its Servers
+        function selectEpisode(epIndex) {
+            currentActiveEpisodeIndex = epIndex;
+            const episode = currentSelectedMovie.episodes[epIndex];
+            if (!episode) return;
+
+            document.querySelectorAll('.ep-btn').forEach(btn => btn.classList.replace('bg-cyan-500', 'bg-gray-800'));
+            const activeBtn = document.getElementById(`ep-btn-${epIndex}`);
+            if (activeBtn) {
+                activeBtn.classList.replace('bg-gray-800', 'bg-cyan-500');
+            }
+
+            renderServersUI(episode);
+        }
+
+        // Render Single Audio / Multi Audio & SR1, SR2, SR5 Servers
+        function renderServersUI(episode) {
+            const area = document.getElementById('serverButtonsArea');
+            if (!episode.servers || episode.servers.length === 0) {
+                area.innerHTML = '<p class="text-xs text-gray-400">No servers added for this episode.</p>';
+                return;
+            }
+
+            const singleAudioServers = episode.servers.filter(s => (s.audioType || '').toLowerCase().includes('single'));
+            const multiAudioServers = episode.servers.filter(s => !(s.audioType || '').toLowerCase().includes('single'));
+
+            let html = '';
+
+            if (singleAudioServers.length > 0) {
+                html += `
+                    <div class="flex flex-col items-center space-y-2">
+                        <div class="text-[11px] font-semibold text-cyan-400 flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Single Audio
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${singleAudioServers.map((s, idx) => `
+                                <button onclick="playServerUrl('${s.embedUrl}', this)" class="server-btn bg-gray-800 hover:bg-cyan-500 text-white font-bold px-4 py-1.5 rounded-md text-xs border border-gray-700 transition">
+                                    ${s.serverName || 'SR ' + (idx + 1)}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (multiAudioServers.length > 0) {
+                html += `
+                    <div class="flex flex-col items-center space-y-2">
+                        <div class="text-[11px] font-semibold text-pink-400 flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-pink-400"></span> Multi-Audio
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${multiAudioServers.map((s, idx) => `
+                                <button onclick="playServerUrl('${s.embedUrl}', this)" class="server-btn bg-gray-800 hover:bg-cyan-500 text-white font-bold px-4 py-1.5 rounded-md text-xs border border-gray-700 transition">
+                                    ${s.serverName || 'SR ' + (idx + 1)}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            area.innerHTML = html;
+
+            const firstServer = episode.servers[0];
+            if (firstServer && firstServer.embedUrl) {
+                loadVideoIframe(firstServer.embedUrl);
+                const firstServerBtn = area.querySelector('.server-btn');
+                if (firstServerBtn) firstServerBtn.classList.replace('bg-gray-800', 'bg-cyan-500');
+            }
+        }
+
+        function playServerUrl(url, btnElement) {
+            document.querySelectorAll('.server-btn').forEach(b => b.classList.replace('bg-cyan-500', 'bg-gray-800'));
+            if (btnElement) btnElement.classList.replace('bg-gray-800', 'bg-cyan-500');
+            loadVideoIframe(url);
+        }
+
+        function loadVideoIframe(url) {
+            let embedUrl = url || '';
+            if (embedUrl.includes('watch?v=')) {
+                embedUrl = embedUrl.replace('watch?v=', 'embed/');
+            }
+            document.getElementById('pageVideoPlayerIframe').src = embedUrl;
+        }
+
+        function renderHomeViewUI() {
             document.getElementById('pageVideoPlayerIframe').src = '';
             document.getElementById('movieWatchPage').classList.add('hidden');
             document.getElementById('heroSection').classList.remove('hidden');
             document.getElementById('categoryCarousels').classList.remove('hidden');
             clearSearch();
-            
-            // Clear URL Hash
-            if (window.location.hash === '#watch') {
-                history.pushState("", document.title, window.location.pathname + window.location.search);
-            }
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Listen for Browser Back/Forward Buttons
-        window.addEventListener('popstate', function() {
+        function goBackToHome() {
+            if (window.location.hash === '#watch') {
+                history.back();
+            } else {
+                renderHomeViewUI();
+            }
+        }
+
+        window.addEventListener('hashchange', function() {
             if (window.location.hash !== '#watch') {
-                goBackToHome();
+                renderHomeViewUI();
             }
         });
 
-        function playHeroMovie() {
-            openMoviePage(allMovies[0]?._id);
+        if (window.location.hash === '#watch') {
+            history.replaceState("", document.title, window.location.pathname + window.location.search);
         }
 
-        function openHeroDetails() {
-            openMoviePage(allMovies[0]?._id);
-        }
+        function playHeroMovie() { openMoviePage(allMovies[0]?._id); }
+        function openHeroDetails() { openMoviePage(allMovies[0]?._id); }
 
-        // Initialize App
         fetchMovies();
     </script>
 </body>

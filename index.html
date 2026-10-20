@@ -94,8 +94,10 @@
                     <button onclick="goBackToHome()" class="text-white hover:text-redflix-red transition">Home</button>
                     <a href="#trending" onclick="goBackToHome()" class="hover:text-redflix-red transition">Trending</a>
                     <a href="#action" onclick="goBackToHome()" class="hover:text-redflix-red transition">Action</a>
-                    <a href="#series" onclick="goBackToHome()" class="hover:text-redflix-red transition">Popular Series</a>
+                    <a href="#series" onclick="goBackToHome()" class="hover:text-redflix-red transition">Series</a>
                     <a href="#anime" onclick="goBackToHome()" class="hover:text-redflix-red transition">Anime</a>
+                    <a href="#comedy" onclick="goBackToHome()" class="hover:text-redflix-red transition">Comedy</a>
+                    <a href="#thriller" onclick="goBackToHome()" class="hover:text-redflix-red transition">Thriller</a>
                 </nav>
             </div>
 
@@ -247,6 +249,34 @@
                 <div id="animeRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2"></div>
             </section>
 
+            <!-- Comedy Movies -->
+            <section id="comedy">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                        <span class="w-1 h-5 bg-redflix-red rounded-full"></span> Comedy Movies & Shows
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button onclick="scrollRow('comedyRow', -300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="scrollRow('comedyRow', 300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div id="comedyRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2"></div>
+            </section>
+
+            <!-- Thriller & Mystery -->
+            <section id="thriller">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                        <span class="w-1 h-5 bg-redflix-red rounded-full"></span> Thriller & Mystery
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button onclick="scrollRow('thrillerRow', -300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="scrollRow('thrillerRow', 300)" class="w-8 h-8 rounded-full bg-gray-800/80 hover:bg-redflix-red flex items-center justify-center text-sm transition"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div id="thrillerRow" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2"></div>
+            </section>
+
         </div>
 
         <!-- Dedicated Watch Page Section -->
@@ -262,12 +292,11 @@
                 </div>
             </div>
 
-            <!-- Notice Banner -->
             <div class="text-center text-xs text-gray-400 bg-gray-900/40 p-2 rounded-lg border border-gray-800">
                 ভিডিও সার্ভার আমাদের নিয়ন্ত্রণে নয়, তাই অ্যাডস কম-বেশি হতে পারে। বেশি হলে ডাউনলোড করে দেখুন।
             </div>
 
-            <!-- Server Selectors Box (Dynamic) -->
+            <!-- Server Selectors Box -->
             <div id="serverContainer" class="hidden bg-gray-900/80 border border-gray-800 rounded-2xl p-5 text-center space-y-4">
                 <h4 class="text-xs sm:text-sm font-extrabold text-gray-300 uppercase tracking-widest">
                     SELECT SERVER / সার্ভার নির্বাচন করুন
@@ -275,7 +304,7 @@
                 <div id="serverButtonsArea" class="flex flex-wrap items-center justify-center gap-6 pt-2"></div>
             </div>
 
-            <!-- Episodes List Grid (Dynamic 1-120+) -->
+            <!-- Episodes List Grid -->
             <div id="episodeContainer" class="hidden bg-gray-900/60 border border-gray-800 rounded-2xl p-5 text-center space-y-4">
                 <div id="episodeButtonsGrid" class="grid grid-cols-5 sm:grid-cols-10 md:grid-cols-12 gap-2 max-h-60 overflow-y-auto p-1"></div>
             </div>
@@ -423,16 +452,22 @@
             const actionRow = document.getElementById('actionRow');
             const seriesRow = document.getElementById('seriesRow');
             const animeRow = document.getElementById('animeRow');
+            const comedyRow = document.getElementById('comedyRow');
+            const thrillerRow = document.getElementById('thrillerRow');
 
             const trendingMovies = allMovies.filter(m => hasCategory(m, 'trending'));
             const actionMovies = allMovies.filter(m => hasCategory(m, 'action'));
             const seriesMovies = allMovies.filter(m => hasCategory(m, 'series') || hasCategory(m, 'popular series'));
             const animeMovies = allMovies.filter(m => hasCategory(m, 'anime'));
+            const comedyMovies = allMovies.filter(m => hasCategory(m, 'comedy'));
+            const thrillerMovies = allMovies.filter(m => hasCategory(m, 'thriller') || hasCategory(m, 'mystery'));
 
             if (trendingRow) trendingRow.innerHTML = trendingMovies.length ? trendingMovies.map(createMovieCardHTML).join('') : '<p class="text-xs text-gray-500 py-4 pl-2">No trending movies added yet.</p>';
             if (actionRow) actionRow.innerHTML = actionMovies.length ? actionMovies.map(createMovieCardHTML).join('') : '<p class="text-xs text-gray-500 py-4 pl-2">No action movies added yet.</p>';
             if (seriesRow) seriesRow.innerHTML = seriesMovies.length ? seriesMovies.map(createMovieCardHTML).join('') : '<p class="text-xs text-gray-500 py-4 pl-2">No series added yet.</p>';
             if (animeRow) animeRow.innerHTML = animeMovies.length ? animeMovies.map(createMovieCardHTML).join('') : '<p class="text-xs text-gray-500 py-4 pl-2">No anime added yet.</p>';
+            if (comedyRow) comedyRow.innerHTML = comedyMovies.length ? comedyMovies.map(createMovieCardHTML).join('') : '<p class="text-xs text-gray-500 py-4 pl-2">No comedy movies added yet.</p>';
+            if (thrillerRow) thrillerRow.innerHTML = thrillerMovies.length ? thrillerMovies.map(createMovieCardHTML).join('') : '<p class="text-xs text-gray-500 py-4 pl-2">No thriller movies added yet.</p>';
         }
 
         function scrollRow(rowId, distance) {
@@ -469,7 +504,6 @@
             document.getElementById('categoryCarousels').classList.remove('hidden');
         }
 
-        // Open Movie / Series Page with Episodes & Server UI
         function openMoviePage(movieId) {
             const movie = allMovies.find(m => m._id === movieId) || allMovies[0];
             if (!movie) return;
@@ -511,7 +545,6 @@
             }
         }
 
-        // Render Episodes 1-120+ Buttons
         function renderEpisodesUI() {
             const grid = document.getElementById('episodeButtonsGrid');
             if (!currentSelectedMovie || !currentSelectedMovie.episodes) return;
@@ -529,7 +562,6 @@
             grid.innerHTML = html;
         }
 
-        // Select Episode & Render its Servers
         function selectEpisode(epIndex) {
             currentActiveEpisodeIndex = epIndex;
             const episode = currentSelectedMovie.episodes[epIndex];
@@ -544,7 +576,6 @@
             renderServersUI(episode);
         }
 
-        // Render Single Audio / Multi Audio & SR1, SR2, SR5 Servers
         function renderServersUI(episode) {
             const area = document.getElementById('serverButtonsArea');
             if (!episode.servers || episode.servers.length === 0) {

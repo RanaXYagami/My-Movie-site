@@ -408,16 +408,20 @@
             `;
         }
 
-        // Helper function to check multiple categories safely
+        // Flexible Category Matching Helper
         function hasCategory(movie, targetCat) {
             if (!movie.category) return false;
-            if (Array.isArray(movie.category)) {
-                return movie.category.map(c => c.toLowerCase()).includes(targetCat.toLowerCase());
-            }
-            return movie.category.toLowerCase() === targetCat.toLowerCase();
+            const target = targetCat.toLowerCase().trim();
+            const categories = Array.isArray(movie.category) ? movie.category : [movie.category];
+
+            return categories.some(cat => {
+                if (typeof cat !== 'string') return false;
+                const c = cat.toLowerCase().trim();
+                return c.includes(target) || target.includes(c);
+            });
         }
 
-        // Populate Carousels with Multiple Category Support
+        // Populate Carousels with Flexible Category Matching Support
         function renderAllRows() {
             const trendingRow = document.getElementById('trendingRow');
             const actionRow = document.getElementById('actionRow');
@@ -429,21 +433,10 @@
             const seriesMovies = allMovies.filter(m => hasCategory(m, 'series') || hasCategory(m, 'popular series'));
             const animeMovies = allMovies.filter(m => hasCategory(m, 'anime'));
 
-            trendingRow.innerHTML = trendingMovies.length 
-                ? trendingMovies.map(createMovieCardHTML).join('') 
-                : '<p class="text-xs text-gray-500 py-4 pl-2">No trending movies added yet.</p>';
-
-            actionRow.innerHTML = actionMovies.length 
-                ? actionMovies.map(createMovieCardHTML).join('') 
-                : '<p class="text-xs text-gray-500 py-4 pl-2">No action movies added yet.</p>';
-
-            seriesRow.innerHTML = seriesMovies.length 
-                ? seriesMovies.map(createMovieCardHTML).join('') 
-                : '<p class="text-xs text-gray-500 py-4 pl-2">No series added yet.</p>';
-
-            animeRow.innerHTML = animeMovies.length 
-                ? animeMovies.map(createMovieCardHTML).join('') 
-                : '<p class="text-xs text-gray-500 py-4 pl-2">No anime added yet.</p>';
+            if (trendingRow) trendingRow.innerHTML = trendingMovies.length ? trendingMovies.map(createMovieCardHTML).join('') : '<p class="text-xs text-gray-500 py-4 pl-2">No trending movies added yet.</p>';
+            if (actionRow) actionRow.innerHTML = actionMovies.length ? actionMovies.map(createMovieCardHTML).join('') : '<p class="text-xs text-gray-500 py-4 pl-2">No action movies added yet.</p>';
+            if (seriesRow) seriesRow.innerHTML = seriesMovies.length ? seriesMovies.map(createMovieCardHTML).join('') : '<p class="text-xs text-gray-500 py-4 pl-2">No series added yet.</p>';
+            if (animeRow) animeRow.innerHTML = animeMovies.length ? animeMovies.map(createMovieCardHTML).join('') : '<p class="text-xs text-gray-500 py-4 pl-2">No anime added yet.</p>';
         }
 
         // Horizontal Row Scroll

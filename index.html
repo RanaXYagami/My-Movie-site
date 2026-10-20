@@ -70,9 +70,8 @@
             transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
         }
         .movie-card:hover {
-            transform: scale(1.06);
+            transform: scale(1.05);
             z-index: 20;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
         }
 
         .hero-gradient {
@@ -376,7 +375,7 @@
     <script>
         const SANITY_PROJECT_ID = 'hbhc4jai';
         const SANITY_DATASET = 'production';
-        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, category, imdbRating, year, embedUrl, "videoUrl": embedUrl, overview, description, isSeries, episodes}');
+        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, category, imdbRating, year, embedUrl, "videoUrl": embedUrl, overview, description, isSeries, episodes, quality, audioLanguage, status}');
         const SANITY_ENDPOINT = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${SANITY_QUERY}`;
 
         let allMovies = [];
@@ -394,13 +393,15 @@
                         title: m.title || 'Untitled Movie',
                         genre: m.genre || 'Action',
                         category: m.category || [],
-                        rating: m.imdbRating || '8.5',
+                        rating: m.imdbRating || 'N/A',
                         year: m.year || '2026',
                         imageUrl: m.imageUrl || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80',
                         videoUrl: m.videoUrl || m.embedUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
                         description: m.overview || m.description || 'No description available.',
                         isSeries: m.isSeries || false,
-                        episodes: m.episodes || []
+                        episodes: m.episodes || [],
+                        status: m.status || 'NEW',
+                        audioLanguage: m.audioLanguage || 'Bangla'
                     }));
                 }
             } catch (err) {
@@ -410,27 +411,52 @@
             renderAllRows();
         }
 
+        // Custom Movie Card HTML (3-number Screenshot Style UI)
         function createMovieCardHTML(movie) {
+            let statusBg = 'bg-red-600';
+            const statusText = movie.status || 'NEW';
+            if (statusText === 'UPDATED') statusBg = 'bg-amber-500 text-black font-extrabold';
+            else if (statusText === 'UPCOMING') statusBg = 'bg-indigo-600 text-white';
+            else if (statusText === 'HD') statusBg = 'bg-redflix-red text-white';
+
+            let audioText = movie.audioLanguage || 'Bangla';
+            if (audioText.toLowerCase().includes('bengali') || audioText.toLowerCase().includes('bangla')) audioText = 'Bangla';
+            else if (audioText.toLowerCase().includes('dual')) audioText = 'Hindi (Dual-Aud)';
+            else if (audioText.toLowerCase().includes('hindi')) audioText = 'Hindi';
+
             return `
                 <div class="flex-none w-40 sm:w-48 cursor-pointer movie-card group" onclick="openMoviePage('${movie._id}')">
-                    <div class="relative aspect-[2/3] rounded-xl overflow-hidden bg-gray-800 shadow-md">
+                    <div class="relative aspect-[2/3] rounded-xl overflow-hidden bg-gray-900 border border-gray-800 shadow-xl">
+                        <!-- Poster Image -->
                         <img src="${movie.imageUrl}" alt="${movie.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-between p-3">
-                            <div class="flex justify-end">
-                                <span class="bg-redflix-red text-white text-[10px] font-bold px-1.5 py-0.5 rounded">HD</span>
-                            </div>
-                            <div>
-                                <div class="w-8 h-8 rounded-full bg-redflix-red text-white flex items-center justify-center mb-2 mx-auto shadow-lg transform translate-y-4 group-hover:translate-y-0 transition duration-300">
-                                    <i class="fa-solid fa-play text-xs pl-0.5"></i>
-                                </div>
-                                <h4 class="text-xs font-bold text-white truncate">${movie.title}</h4>
-                                <div class="flex items-center justify-between text-[10px] text-gray-300 mt-1">
-                                    <span class="text-yellow-400 font-bold"><i class="fa-solid fa-star"></i> ${movie.rating}</span>
-                                    <span>${movie.year}</span>
-                                </div>
+                        
+                        <!-- Top Left Status Badge (NEW / UPDATED / UPCOMING) -->
+                        <div class="absolute top-2 left-2 z-10">
+                            <span class="${statusBg} text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider shadow-md">
+                                ${statusText}
+                            </span>
+                        </div>
+
+                        <!-- Center Hover Play Button -->
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center z-10">
+                            <div class="w-11 h-11 rounded-full bg-slate-900/90 text-white flex items-center justify-center border border-gray-700 shadow-2xl transform scale-75 group-hover:scale-100 transition duration-300">
+                                <i class="fa-solid fa-play text-sm pl-0.5"></i>
                             </div>
                         </div>
+
+                        <!-- Bottom Floating Info Badges (Audio & Rating) -->
+                        <div class="absolute bottom-2 left-2 right-2 flex items-center justify-between z-10 pointer-events-none">
+                            <span class="bg-cyan-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
+                                ${audioText}
+                            </span>
+                            <span class="bg-cyan-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
+                                ${movie.rating}
+                            </span>
+                        </div>
                     </div>
+
+                    <!-- Title Below Poster -->
+                    <h4 class="text-xs font-bold text-gray-200 mt-2 truncate group-hover:text-redflix-red transition">${movie.title}</h4>
                 </div>
             `;
         }

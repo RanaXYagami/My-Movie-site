@@ -82,15 +82,6 @@
             background: linear-gradient(180deg, rgba(20,20,20,0.2) 0%, rgba(20,20,20,0.7) 60%, #141414 100%),
                         linear-gradient(90deg, rgba(20,20,20,0.9) 0%, rgba(20,20,20,0.4) 50%, rgba(20,20,20,0.9) 100%);
         }
-
-        .modal-fade {
-            animation: fadeIn 0.25s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
     </style>
 </head>
 <body class="bg-redflix-dark text-white min-h-screen flex flex-col justify-between">
@@ -135,7 +126,8 @@
 
     <!-- Main Content Area -->
     <main class="flex-grow pb-16">
-        <!-- Hero Featured Movie Banner with updated image -->
+        
+        <!-- Hero Featured Movie Banner -->
         <section id="heroSection" class="relative w-full h-[75vh] sm:h-[85vh] flex items-end pb-12 sm:pb-20 px-4 sm:px-12 bg-cover bg-center transition-all duration-700" style="background-image: url('https://cdn.discordapp.com/attachments/1375166818087604366/1562060763093540894/IMG_20261020_171123.jpg?ex=6ad89df3&is=6ad74c73&hm=ff60dec3c7664f6584adbf2fc4314bd3d05be9694a3c92e57064aee0d4cf6f79&');">
             <!-- Dark Overlay Gradients -->
             <div class="absolute inset-0 hero-gradient"></div>
@@ -244,17 +236,6 @@
                 </div>
             </section>
 
-            <!-- Middle Native Adsterra Placement Slot -->
-            <div class="my-4">
-                <div class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border border-gray-800 rounded-xl p-4 text-center flex flex-col items-center justify-center min-h-[100px] relative">
-                    <span class="text-[10px] text-gray-500 uppercase tracking-widest absolute top-1 right-3">Sponsored Content</span>
-                    <div class="text-xs text-gray-400 flex items-center space-x-2">
-                        <i class="fa-solid fa-bolt text-yellow-500"></i>
-                        <span>[Adsterra Native / Smart Link Ad Placement Slot]</span>
-                    </div>
-                </div>
-            </div>
-
             <!-- Popular Series Section -->
             <section id="series">
                 <div class="flex items-center justify-between mb-3">
@@ -288,46 +269,68 @@
             </section>
 
         </div>
-    </main>
 
-    <!-- Video Player Modal Overlay -->
-    <div id="videoModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4 transition-all duration-300">
-        <div class="relative w-full max-w-5xl bg-redflix-cardBg border border-gray-800 rounded-2xl overflow-hidden shadow-2xl modal-fade">
-            <!-- Modal Header / Title bar -->
-            <div class="flex items-center justify-between p-4 border-b border-gray-800 bg-black/50">
-                <div class="flex items-center space-x-3">
-                    <span class="w-2.5 h-2.5 rounded-full bg-redflix-red animate-pulse"></span>
-                    <h3 id="modalMovieTitle" class="text-base sm:text-lg font-bold text-white truncate max-w-md">
-                        Playing Title
-                    </h3>
-                </div>
-                <button onclick="closeVideoModal()" class="w-9 h-9 rounded-full bg-gray-800 hover:bg-redflix-red flex items-center justify-center text-gray-300 hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+        <!-- Dedicated Full Watch Page Section (Rtally Style) -->
+        <section id="movieWatchPage" class="hidden max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-8">
+            <!-- Back Button -->
+            <div class="flex items-center space-x-2 text-xs text-gray-400">
+                <button onclick="goBackToHome()" class="hover:text-redflix-red font-bold flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-left"></i> Home
                 </button>
+                <span>/</span>
+                <span id="pageMovieTitleBreadcrumb" class="text-gray-200">Movie</span>
             </div>
 
-            <!-- Video Player Area -->
-            <div class="relative aspect-video w-full bg-black">
-                <iframe id="videoPlayerIframe" class="w-full h-full border-0" allowfullscreen allow="autoplay"></iframe>
+            <!-- Video Player Screen -->
+            <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-gray-800 shadow-2xl">
+                <iframe id="pageVideoPlayerIframe" class="w-full h-full border-0" allowfullscreen allow="autoplay"></iframe>
             </div>
 
-            <!-- Modal Bottom Details Area -->
-            <div class="p-4 sm:p-6 bg-redflix-dark space-y-4">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div class="space-y-1">
-                        <div class="flex items-center space-x-3 text-xs text-gray-400">
-                            <span id="modalRating" class="text-yellow-400 font-bold"><i class="fa-solid fa-star"></i> 8.5</span>
-                            <span id="modalYear">2026</span>
-                            <span id="modalGenre" class="bg-gray-800 px-2 py-0.5 rounded text-gray-300">Action</span>
-                        </div>
-                        <p id="modalDescription" class="text-sm text-gray-300 max-w-2xl">
-                            Movie description will load here...
-                        </p>
+            <!-- Download & Social Hub Box (3 Buttons Layout) -->
+            <div class="bg-gray-900/60 border border-gray-800 rounded-2xl p-6 text-center space-y-4">
+                <h3 class="text-sm font-extrabold text-redflix-red uppercase tracking-wider">HOW TO DOWNLOAD??</h3>
+                <p class="text-xs text-gray-400">Click on the logo to see Download Process</p>
+                <button class="bg-redflix-red text-white font-extrabold px-6 py-2.5 rounded-xl text-xs shadow-lg hover:opacity-90 transition">
+                    CLICK ME TO WATCH!
+                </button>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
+                    <!-- Telegram Link -->
+                    <a href="YOUR_TELEGRAM_LINK_HERE" target="_blank" class="bg-gray-800/80 border border-gray-700 hover:border-redflix-red p-3 rounded-xl flex items-center justify-center space-x-2 text-xs font-bold transition">
+                        <i class="fa-brands fa-telegram text-sky-400"></i>
+                        <span>Join TELEGRAM</span>
+                    </a>
+
+                    <!-- Facebook Link -->
+                    <a href="YOUR_FACEBOOK_LINK_HERE" target="_blank" class="bg-gray-800/80 border border-gray-700 hover:border-redflix-red p-3 rounded-xl flex items-center justify-center space-x-2 text-xs font-bold transition">
+                        <i class="fa-brands fa-facebook text-blue-500"></i>
+                        <span>Join FACEBOOK</span>
+                    </a>
+
+                    <!-- Anime Hub Link -->
+                    <a href="#" target="_blank" class="bg-gray-800/80 border border-gray-700 hover:border-redflix-red p-3 rounded-xl flex items-center justify-center space-x-2 text-xs font-bold transition">
+                        <i class="fa-solid fa-film text-emerald-400"></i>
+                        <span>ANIME HUB</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Movie Details Info -->
+            <div class="flex flex-col md:flex-row gap-6 bg-gray-900/40 border border-gray-800 rounded-2xl p-6">
+                <img id="pageMoviePoster" src="" class="w-36 sm:w-48 aspect-[2/3] object-cover rounded-xl shadow-lg border border-gray-800">
+                <div class="space-y-3 flex-1">
+                    <h1 id="pageMovieTitle" class="text-2xl sm:text-4xl font-extrabold text-white"></h1>
+                    <p id="pageMovieDesc" class="text-xs sm:text-sm text-gray-300 leading-relaxed"></p>
+                    <div class="flex flex-wrap items-center gap-3 text-xs text-gray-400 pt-2">
+                        <span id="pageMovieRating" class="bg-redflix-red/20 text-redflix-red border border-redflix-red/40 px-2.5 py-1 rounded-md font-bold"></span>
+                        <span id="pageMovieYear" class="bg-gray-800 px-2.5 py-1 rounded-md font-medium text-gray-300"></span>
+                        <span id="pageMovieGenre" class="bg-gray-800 px-2.5 py-1 rounded-md font-medium text-gray-300"></span>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+
+    </main>
 
     <!-- Footer -->
     <footer class="bg-black border-t border-gray-900 py-8 px-4 sm:px-8 text-gray-500 text-xs">
@@ -349,7 +352,7 @@
         // Sanity API Configuration
         const SANITY_PROJECT_ID = 'hbhc4jai';
         const SANITY_DATASET = 'production';
-        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, category, rating, year, embedUrl, "videoUrl": embedUrl}');
+        const SANITY_QUERY = encodeURIComponent('*[_type == "movie"]{_id, title, "imageUrl": poster.asset->url, genre, category, rating, year, embedUrl, "videoUrl": embedUrl, description}');
         const SANITY_ENDPOINT = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}?query=${SANITY_QUERY}`;
 
         let allMovies = [];
@@ -379,10 +382,10 @@
             renderAllRows();
         }
 
-        // Render Card Helper
+        // Render Card Helper with openMoviePage
         function createMovieCardHTML(movie) {
             return `
-                <div class="flex-none w-40 sm:w-48 cursor-pointer movie-card group" onclick="openVideoModal('${movie._id}')">
+                <div class="flex-none w-40 sm:w-48 cursor-pointer movie-card group" onclick="openMoviePage('${movie._id}')">
                     <div class="relative aspect-[2/3] rounded-xl overflow-hidden bg-gray-800 shadow-md">
                         <img src="${movie.imageUrl}" alt="${movie.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80'">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-between p-3">
@@ -405,7 +408,7 @@
             `;
         }
 
-        // Populate Carousels Strictly
+        // Populate Carousels
         function renderAllRows() {
             const trendingRow = document.getElementById('trendingRow');
             const actionRow = document.getElementById('actionRow');
@@ -470,39 +473,49 @@
             document.getElementById('categoryCarousels').classList.remove('hidden');
         }
 
-        // Video Modal Control
-        function openVideoModal(movieId) {
+        // Open Dedicated Movie Page (Rtally Style)
+        function openMoviePage(movieId) {
             const movie = allMovies.find(m => m._id === movieId) || allMovies[0];
             if (!movie) return;
-            
-            document.getElementById('modalMovieTitle').innerText = movie.title;
-            document.getElementById('modalRating').innerHTML = `<i class="fa-solid fa-star"></i> ${movie.rating}`;
-            document.getElementById('modalYear').innerText = movie.year;
-            document.getElementById('modalGenre').innerText = movie.genre;
-            document.getElementById('modalDescription').innerText = movie.description;
+
+            document.getElementById('pageMovieTitle').innerText = movie.title;
+            document.getElementById('pageMovieTitleBreadcrumb').innerText = movie.title;
+            document.getElementById('pageMovieDesc').innerText = movie.description;
+            document.getElementById('pageMovieRating').innerHTML = `<i class="fa-solid fa-star text-yellow-400"></i> ${movie.rating}`;
+            document.getElementById('pageMovieYear').innerText = movie.year;
+            document.getElementById('pageMovieGenre').innerText = movie.genre;
+            document.getElementById('pageMoviePoster').src = movie.imageUrl;
 
             let embedUrl = movie.videoUrl;
             if (embedUrl && embedUrl.includes('watch?v=')) {
                 embedUrl = embedUrl.replace('watch?v=', 'embed/');
             }
 
-            document.getElementById('videoPlayerIframe').src = embedUrl;
-            document.getElementById('videoModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            document.getElementById('pageVideoPlayerIframe').src = embedUrl;
+
+            // Hide Home & Show Watch Page
+            document.getElementById('heroSection').classList.add('hidden');
+            document.getElementById('categoryCarousels').classList.add('hidden');
+            document.getElementById('searchResultsSection').classList.add('hidden');
+            document.getElementById('movieWatchPage').classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function closeVideoModal() {
-            document.getElementById('videoPlayerIframe').src = '';
-            document.getElementById('videoModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
+        // Back to Home
+        function goBackToHome() {
+            document.getElementById('pageVideoPlayerIframe').src = '';
+            document.getElementById('movieWatchPage').classList.add('hidden');
+            document.getElementById('heroSection').classList.remove('hidden');
+            document.getElementById('categoryCarousels').classList.remove('hidden');
         }
 
         function playHeroMovie() {
-            openVideoModal(allMovies[0]?._id);
+            openMoviePage(allMovies[0]?._id);
         }
 
         function openHeroDetails() {
-            openVideoModal(allMovies[0]?._id);
+            openMoviePage(allMovies[0]?._id);
         }
 
         // Initialize App
